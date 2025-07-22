@@ -50,6 +50,8 @@ jobs:
         echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
         echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=5432" >> .env
+        echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
+        echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
 
     - name: Run migrations
       run: |
