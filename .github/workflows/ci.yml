@@ -69,7 +69,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
+        docker build -t self_study_project:${{ github.sha }} .
 
     - name: Push Docker image to registry
       run: |
