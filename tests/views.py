@@ -2,7 +2,7 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.permissions import IsAdminOrTeacher, IsStudent
+from users.permissions import IsAdminOrTeacher, IsStudent, IsOwnerOrAdmin
 
 from .models import Answer, Question, Test, TestResult
 from .serializers import (
@@ -24,7 +24,7 @@ class TestViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAdminOrTeacher()]
+            return [IsAdminOrTeacher(), IsOwnerOrAdmin()]
         return [permissions.IsAuthenticated()]
 
 
@@ -36,7 +36,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAdminOrTeacher()]
+            return [IsAdminOrTeacher(), IsOwnerOrAdmin()]
         return [permissions.IsAuthenticated()]
 
 
@@ -48,7 +48,7 @@ class AnswerViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAdminOrTeacher()]
+            return [IsAdminOrTeacher(), IsOwnerOrAdmin()]
         return [permissions.IsAuthenticated()]
 
 

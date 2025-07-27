@@ -1,6 +1,6 @@
 from rest_framework import permissions, viewsets
 
-from users.permissions import IsAdminOrTeacher
+from users.permissions import IsAdminOrTeacher, IsOwnerOrAdmin
 
 from .models import Course, Material
 from .serializers import CourseSerializer, MaterialSerializer
@@ -16,7 +16,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAdminOrTeacher()]
+            return [IsAdminOrTeacher(), IsOwnerOrAdmin()]
         return [permissions.IsAuthenticated()]
 
     def perform_create(self, serializer):
@@ -31,5 +31,8 @@ class MaterialViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAdminOrTeacher()]
+            return [IsAdminOrTeacher(), IsOwnerOrAdmin()]
         return [permissions.IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

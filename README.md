@@ -69,7 +69,7 @@ pytest --cov=. --cov-report=term-missing -v
 ## Документация API
 - Swagger UI: [http://localhost/swagger/](http://localhost/swagger/)
 - Redoc: [http://localhost/redoc/](http://localhost/redoc/)
-- Подробности — см. API.md
+- **Postman Collection**: `Study_Platform_API.postman_collection.json` - импортируйте в Postman для удобного тестирования API
 
 ## Основные роли и права
 - **Администратор**: полный доступ ко всем функциям, управление пользователями

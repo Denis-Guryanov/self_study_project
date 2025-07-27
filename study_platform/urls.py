@@ -33,9 +33,11 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('users.urls')),
-    path('api/', include('courses.urls')),
-    path('api/', include('tests.urls')),
+    # API endpoints с понятными префиксами
+    path('api/', include('users.urls')),  # Пользователи, регистрация, аутентификация
+    path('api/', include('courses.urls')),  # Курсы и материалы
+    path('api/', include('tests.urls')),  # Тесты, вопросы, ответы
+    # Документация API
     path(
         'swagger/',
         schema_view.with_ui('swagger', cache_timeout=0),

@@ -23,6 +23,7 @@ class Material(models.Model):
     )
     title = models.CharField(max_length=255)
     content = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='materials', null=True, blank=True)
 
     class Meta:
         ordering = ['id']

@@ -1,0 +1,921 @@
+{
+	"info": {
+		"_postman_id": "study-platform-api",
+		"name": "Study Platform API",
+		"description": "API документация для платформы самообучения студентов",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Аутентификация",
+			"item": [
+				{
+					"name": "Регистрация пользователя",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"student1\",\n    \"password\": \"pass1234\",\n    \"email\": \"student1@example.com\",\n    \"role\": \"student\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register",
+								""
+							]
+						},
+						"description": "Регистрация нового пользователя. Email обязателен. После регистрации на email приходит письмо с подтверждением."
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Логин",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"student1\",\n    \"password\": \"pass1234\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login",
+								""
+							]
+						},
+						"description": "Получение JWT токенов для аутентификации"
+					},
+					"response": []
+				},
+				{
+					"name": "Подтверждение email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/confirm-email/{{email_token}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"confirm-email",
+								"{{email_token}}",
+								""
+							]
+						},
+						"description": "Подтверждение email по токену, полученному в письме"
+					},
+					"response": []
+				},
+				{
+					"name": "Обновление токена",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/token/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								"refresh",
+								""
+							]
+						},
+						"description": "Обновление access токена с помощью refresh токена"
+					},
+					"response": []
+				}
+			],
+			"description": "Эндпоинты для регистрации, аутентификации и управления токенами"
+		},
+		{
+			"name": "Пользователи",
+			"item": [
+				{
+					"name": "Получить список пользователей",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						},
+						"description": "Получить список всех пользователей (только для админов)"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить пользователя по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/{{user_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном пользователе"
+					},
+					"response": []
+				}
+			],
+			"description": "Управление пользователями (только для админов)"
+		},
+		{
+			"name": "Курсы",
+			"item": [
+				{
+					"name": "Получить список курсов",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/courses/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								""
+							]
+						},
+						"description": "Получить список всех курсов с пагинацией"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать курс",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Python Programming\",\n    \"description\": \"Learn Python programming language\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								""
+							]
+						},
+						"description": "Создать новый курс (только для преподавателей и админов)"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить курс по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/courses/{{course_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								"{{course_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном курсе"
+					},
+					"response": []
+				},
+				{
+					"name": "Обновить курс",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Python Course\",\n    \"description\": \"Updated description\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses/{{course_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								"{{course_id}}",
+								""
+							]
+						},
+						"description": "Обновить курс (только владелец или админ)"
+					},
+					"response": []
+				},
+				{
+					"name": "Удалить курс",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/courses/{{course_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								"{{course_id}}",
+								""
+							]
+						},
+						"description": "Удалить курс (только владелец или админ)"
+					},
+					"response": []
+				}
+			],
+			"description": "Управление курсами"
+		},
+		{
+			"name": "Материалы",
+			"item": [
+				{
+					"name": "Получить список материалов",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/materials/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"materials",
+								""
+							]
+						},
+						"description": "Получить список всех материалов"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать материал",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"course\": 1,\n    \"title\": \"Introduction to Python\",\n    \"content\": \"Python is a high-level programming language...\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/materials/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"materials",
+								""
+							]
+						},
+						"description": "Создать новый материал (только для преподавателей и админов)"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить материал по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/materials/{{material_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"materials",
+								"{{material_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном материале"
+					},
+					"response": []
+				},
+				{
+					"name": "Обновить материал",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Material Title\",\n    \"content\": \"Updated content...\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/materials/{{material_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"materials",
+								"{{material_id}}",
+								""
+							]
+						},
+						"description": "Обновить материал (только владелец или админ)"
+					},
+					"response": []
+				},
+				{
+					"name": "Удалить материал",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/materials/{{material_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"materials",
+								"{{material_id}}",
+								""
+							]
+						},
+						"description": "Удалить материал (только владелец или админ)"
+					},
+					"response": []
+				}
+			],
+			"description": "Управление материалами курсов"
+		},
+		{
+			"name": "Тесты",
+			"item": [
+				{
+					"name": "Получить список тестов",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tests",
+								""
+							]
+						},
+						"description": "Получить список всех тестов"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать тест",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"material\": 1,\n    \"title\": \"Python Basics Test\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tests",
+								""
+							]
+						},
+						"description": "Создать новый тест (только для преподавателей и админов)"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить тест по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tests/{{test_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tests",
+								"{{test_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном тесте"
+					},
+					"response": []
+				},
+				{
+					"name": "Прохождение теста",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"answers\": {\n        \"1\": 1,\n        \"2\": 3\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tests/{{test_id}}/check/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tests",
+								"{{test_id}}",
+								"check",
+								""
+							]
+						},
+						"description": "Пройти тест и получить результат (только для студентов)"
+					},
+					"response": []
+				}
+			],
+			"description": "Управление тестами"
+		},
+		{
+			"name": "Вопросы",
+			"item": [
+				{
+					"name": "Получить список вопросов",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/questions/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								""
+							]
+						},
+						"description": "Получить список всех вопросов"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать вопрос",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"test\": 1,\n    \"text\": \"What is Python?\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/questions/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								""
+							]
+						},
+						"description": "Создать новый вопрос (только для преподавателей и админов)"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить вопрос по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/questions/{{question_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								"{{question_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном вопросе"
+					},
+					"response": []
+				}
+			],
+			"description": "Управление вопросами тестов"
+		},
+		{
+			"name": "Ответы",
+			"item": [
+				{
+					"name": "Получить список ответов",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/answers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"answers",
+								""
+							]
+						},
+						"description": "Получить список всех ответов"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать ответ",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": 1,\n    \"text\": \"A programming language\",\n    \"is_correct\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/answers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"answers",
+								""
+							]
+						},
+						"description": "Создать новый ответ (только для преподавателей и админов)"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить ответ по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/answers/{{answer_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"answers",
+								"{{answer_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном ответе"
+					},
+					"response": []
+				}
+			],
+			"description": "Управление ответами на вопросы"
+		},
+		{
+			"name": "Результаты тестов",
+			"item": [
+				{
+					"name": "Получить список результатов",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/test-results/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"test-results",
+								""
+							]
+						},
+						"description": "Получить список всех результатов тестов"
+					},
+					"response": []
+				},
+				{
+					"name": "Получить результат по ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/test-results/{{result_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"test-results",
+								"{{result_id}}",
+								""
+							]
+						},
+						"description": "Получить информацию о конкретном результате теста"
+					},
+					"response": []
+				}
+			],
+			"description": "Просмотр результатов тестов"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "email_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "course_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "material_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "test_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "question_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "answer_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "result_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+} 

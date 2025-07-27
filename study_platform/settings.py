@@ -177,7 +177,8 @@ SWAGGER_SETTINGS = {
 
 SWAGGER_USE_COMPAT_RENDERERS = False
 
-REDIS_URL = 'redis://redis:6379/0'
+# Redis и Celery настройки для локальной разработки
+REDIS_URL = 'redis://localhost:6379/0'
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['json']
@@ -194,3 +195,6 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
+
+# Отключаем автоматическое добавление слеша в конце URL
+APPEND_SLASH = False
