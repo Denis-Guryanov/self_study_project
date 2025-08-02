@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "study-platform-api",
 		"name": "Study Platform API",
-		"description": "API документация для платформы самообучения студентов",
+		"description": "API документация для платформы самообучения студентов с AI-функциями",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -10,7 +10,7 @@
 			"name": "Аутентификация",
 			"item": [
 				{
-					"name": "Регистрация пользователя",
+					"name": "Регистрация студента",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -34,7 +34,65 @@
 								""
 							]
 						},
-						"description": "Регистрация нового пользователя. Email обязателен. После регистрации на email приходит письмо с подтверждением."
+						"description": "Регистрация нового студента. Email обязателен. После регистрации на email приходит письмо с подтверждением."
+					},
+					"response": []
+				},
+				{
+					"name": "Регистрация преподавателя",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"teacher1\",\n    \"password\": \"pass1234\",\n    \"email\": \"teacher1@example.com\",\n    \"role\": \"teacher\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register",
+								""
+							]
+						},
+						"description": "Регистрация нового преподавателя. Email обязателен. После регистрации на email приходит письмо с подтверждением."
+					},
+					"response": []
+				},
+				{
+					"name": "Регистрация с ролью по умолчанию",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"pass1234\",\n    \"email\": \"user1@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register",
+								""
+							]
+						},
+						"description": "Регистрация пользователя без указания роли. По умолчанию создается студент."
 					},
 					"response": []
 				},
@@ -145,7 +203,7 @@
 								""
 							]
 						},
-						"description": "Получить список всех пользователей (только для админов)"
+						"description": "Получение списка пользователей (только для администраторов)"
 					},
 					"response": []
 				},
@@ -171,7 +229,7 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном пользователе"
+						"description": "Получение информации о пользователе по ID"
 					},
 					"response": []
 				}
@@ -192,7 +250,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/courses/",
+							"raw": "{{base_url}}/api/courses/?search=python&ordering=title",
 							"host": [
 								"{{base_url}}"
 							],
@@ -200,9 +258,21 @@
 								"api",
 								"courses",
 								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "python",
+									"description": "Поиск по названию курса"
+								},
+								{
+									"key": "ordering",
+									"value": "title",
+									"description": "Сортировка по названию"
+								}
 							]
 						},
-						"description": "Получить список всех курсов с пагинацией"
+						"description": "Получение списка курсов с возможностью поиска и сортировки"
 					},
 					"response": []
 				},
@@ -222,7 +292,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Python Programming\",\n    \"description\": \"Learn Python programming language\"\n}"
+							"raw": "{\n    \"title\": \"Advanced Python Programming\",\n    \"description\": \"Продвинутый курс по Python с фокусом на веб-разработку\",\n    \"tags\": \"[\\\"python\\\", \\\"web\\\", \\\"advanced\\\"]\",\n    \"difficulty\": \"advanced\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/courses/",
@@ -235,7 +305,7 @@
 								""
 							]
 						},
-						"description": "Создать новый курс (только для преподавателей и админов)"
+						"description": "Создание нового курса с тегами и уровнем сложности (только для преподавателей)"
 					},
 					"response": []
 				},
@@ -261,14 +331,14 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном курсе"
+						"description": "Получение детальной информации о курсе"
 					},
 					"response": []
 				},
 				{
 					"name": "Обновить курс",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [
 							{
 								"key": "Authorization",
@@ -281,7 +351,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Updated Python Course\",\n    \"description\": \"Updated description\"\n}"
+							"raw": "{\n    \"title\": \"Updated Course Title\",\n    \"tags\": \"[\\\"python\\\", \\\"updated\\\"]\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/courses/{{course_id}}/",
@@ -295,7 +365,7 @@
 								""
 							]
 						},
-						"description": "Обновить курс (только владелец или админ)"
+						"description": "Обновление курса (только владелец курса)"
 					},
 					"response": []
 				},
@@ -321,12 +391,198 @@
 								""
 							]
 						},
-						"description": "Удалить курс (только владелец или админ)"
+						"description": "Удаление курса (только владелец курса)"
 					},
 					"response": []
 				}
 			],
 			"description": "Управление курсами"
+		},
+		{
+			"name": "Комментарии",
+			"item": [
+				{
+					"name": "Получить список комментариев",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/comments/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								""
+							]
+						},
+						"description": "Получение списка комментариев с древовидной структурой"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать комментарий",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"material\": {{material_id}},\n    \"content\": \"Отличный материал! Очень понятно объяснено.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/comments/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								""
+							]
+						},
+						"description": "Создание нового комментария к материалу"
+					},
+					"response": []
+				},
+				{
+					"name": "Ответить на комментарий",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"material\": {{material_id}},\n    \"content\": \"Согласен с вами!\",\n    \"parent\": {{comment_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/comments/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								""
+							]
+						},
+						"description": "Создание ответа на существующий комментарий"
+					},
+					"response": []
+				},
+				{
+					"name": "Одобрить комментарий",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/comments/{{comment_id}}/approve/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"{{comment_id}}",
+								"approve",
+								""
+							]
+						},
+						"description": "Одобрение комментария (только для преподавателей и администраторов)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Рекомендации",
+			"item": [
+				{
+					"name": "Получить рекомендации",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/recommendations/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"recommendations",
+								""
+							]
+						},
+						"description": "Получение персонализированных рекомендаций курсов на основе активности пользователя"
+					},
+					"response": []
+				},
+				{
+					"name": "Отследить активность",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"course\": {{course_id}},\n    \"activity_type\": \"view\",\n    \"score\": null\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/activities/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"activities",
+								""
+							]
+						},
+						"description": "Отслеживание активности пользователя (просмотр, завершение, тест)"
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Материалы",
@@ -352,7 +608,7 @@
 								""
 							]
 						},
-						"description": "Получить список всех материалов"
+						"description": "Получение списка материалов"
 					},
 					"response": []
 				},
@@ -372,7 +628,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"course\": 1,\n    \"title\": \"Introduction to Python\",\n    \"content\": \"Python is a high-level programming language...\"\n}"
+							"raw": "{\n    \"course\": {{course_id}},\n    \"title\": \"Введение в Python\",\n    \"content\": \"Python - это высокоуровневый язык программирования...\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/materials/",
@@ -385,7 +641,7 @@
 								""
 							]
 						},
-						"description": "Создать новый материал (только для преподавателей и админов)"
+						"description": "Создание нового материала (только для преподавателей)"
 					},
 					"response": []
 				},
@@ -411,7 +667,7 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном материале"
+						"description": "Получение детальной информации о материале"
 					},
 					"response": []
 				},
@@ -431,7 +687,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Updated Material Title\",\n    \"content\": \"Updated content...\"\n}"
+							"raw": "{\n    \"title\": \"Обновленный заголовок материала\",\n    \"content\": \"Обновленное содержимое материала...\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/materials/{{material_id}}/",
@@ -445,7 +701,7 @@
 								""
 							]
 						},
-						"description": "Обновить материал (только владелец или админ)"
+						"description": "Обновление материала (только владелец материала)"
 					},
 					"response": []
 				},
@@ -471,7 +727,7 @@
 								""
 							]
 						},
-						"description": "Удалить материал (только владелец или админ)"
+						"description": "Удаление материала (только владелец материала)"
 					},
 					"response": []
 				}
@@ -502,7 +758,7 @@
 								""
 							]
 						},
-						"description": "Получить список всех тестов"
+						"description": "Получение списка тестов"
 					},
 					"response": []
 				},
@@ -522,7 +778,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"material\": 1,\n    \"title\": \"Python Basics Test\"\n}"
+							"raw": "{\n    \"material\": {{material_id}},\n    \"title\": \"Тест по Python\",\n    \"description\": \"Проверка знаний основ Python\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/tests/",
@@ -535,7 +791,7 @@
 								""
 							]
 						},
-						"description": "Создать новый тест (только для преподавателей и админов)"
+						"description": "Создание нового теста (только для преподавателей)"
 					},
 					"response": []
 				},
@@ -561,7 +817,7 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном тесте"
+						"description": "Получение детальной информации о тесте"
 					},
 					"response": []
 				},
@@ -581,7 +837,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"answers\": {\n        \"1\": 1,\n        \"2\": 3\n    }\n}"
+							"raw": "{\n    \"answers\": {\n        \"{{question_id}}\": {{answer_id}}\n    }\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/tests/{{test_id}}/check/",
@@ -596,12 +852,11 @@
 								""
 							]
 						},
-						"description": "Пройти тест и получить результат (только для студентов)"
+						"description": "Прохождение теста с автоматической проверкой ответов"
 					},
 					"response": []
 				}
-			],
-			"description": "Управление тестами"
+			]
 		},
 		{
 			"name": "Вопросы",
@@ -627,7 +882,7 @@
 								""
 							]
 						},
-						"description": "Получить список всех вопросов"
+						"description": "Получение списка вопросов"
 					},
 					"response": []
 				},
@@ -647,7 +902,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"test\": 1,\n    \"text\": \"What is Python?\"\n}"
+							"raw": "{\n    \"test\": {{test_id}},\n    \"text\": \"Что такое Python?\",\n    \"question_type\": \"multiple_choice\",\n    \"max_score\": 2\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/questions/",
@@ -660,7 +915,73 @@
 								""
 							]
 						},
-						"description": "Создать новый вопрос (только для преподавателей и админов)"
+						"description": "Создание нового вопроса (только для преподавателей)"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать вопрос-эссе",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"test\": {{test_id}},\n    \"text\": \"Объясните принципы ООП в Python\",\n    \"question_type\": \"essay\",\n    \"max_score\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/questions/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								""
+							]
+						},
+						"description": "Создание вопроса типа эссе с AI-оценкой"
+					},
+					"response": []
+				},
+				{
+					"name": "Создать вопрос с кодом",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"test\": {{test_id}},\n    \"text\": \"Напишите функцию для вычисления факториала\",\n    \"question_type\": \"code\",\n    \"max_score\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/questions/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								""
+							]
+						},
+						"description": "Создание вопроса с кодом и AI-оценкой"
 					},
 					"response": []
 				},
@@ -686,12 +1007,11 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном вопросе"
+						"description": "Получение детальной информации о вопросе"
 					},
 					"response": []
 				}
-			],
-			"description": "Управление вопросами тестов"
+			]
 		},
 		{
 			"name": "Ответы",
@@ -717,7 +1037,7 @@
 								""
 							]
 						},
-						"description": "Получить список всех ответов"
+						"description": "Получение списка ответов"
 					},
 					"response": []
 				},
@@ -737,7 +1057,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"question\": 1,\n    \"text\": \"A programming language\",\n    \"is_correct\": true\n}"
+							"raw": "{\n    \"question\": {{question_id}},\n    \"text\": \"Python - это язык программирования\",\n    \"is_correct\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/answers/",
@@ -750,7 +1070,7 @@
 								""
 							]
 						},
-						"description": "Создать новый ответ (только для преподавателей и админов)"
+						"description": "Создание нового ответа (только для преподавателей)"
 					},
 					"response": []
 				},
@@ -776,12 +1096,11 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном ответе"
+						"description": "Получение детальной информации об ответе"
 					},
 					"response": []
 				}
-			],
-			"description": "Управление ответами на вопросы"
+			]
 		},
 		{
 			"name": "Результаты тестов",
@@ -807,7 +1126,7 @@
 								""
 							]
 						},
-						"description": "Получить список всех результатов тестов"
+						"description": "Получение списка результатов тестов (только для преподавателей)"
 					},
 					"response": []
 				},
@@ -833,12 +1152,11 @@
 								""
 							]
 						},
-						"description": "Получить информацию о конкретном результате теста"
+						"description": "Получение детальной информации о результате теста"
 					},
 					"response": []
 				}
-			],
-			"description": "Просмотр результатов тестов"
+			]
 		}
 	],
 	"event": [
@@ -864,7 +1182,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8000",
+			"value": "http://localhost",
 			"type": "string"
 		},
 		{
@@ -884,37 +1202,42 @@
 		},
 		{
 			"key": "user_id",
-			"value": "1",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "course_id",
-			"value": "1",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "material_id",
-			"value": "1",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "test_id",
-			"value": "1",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "question_id",
-			"value": "1",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "answer_id",
-			"value": "1",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "result_id",
-			"value": "1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "comment_id",
+			"value": "",
 			"type": "string"
 		}
 	]

@@ -27,6 +27,75 @@ def test_user_registration():
 
 
 @pytest.mark.django_db
+def test_user_registration_with_student_role():
+    client = APIClient()
+    url = reverse('register')
+    data = {
+        'username': 'student2',
+        'password': 'pass1234',
+        'email': 'student2@example.com',
+        'role': 'student'
+    }
+    with mock.patch('users.tasks.send_confirmation_email.delay') as mocked_task:
+        response = client.post(url, data)
+        assert response.status_code == 201
+        user = User.objects.get(username='student2')
+        assert user.role == 'student'
+        assert mocked_task.called
+
+
+@pytest.mark.django_db
+def test_user_registration_with_teacher_role():
+    client = APIClient()
+    url = reverse('register')
+    data = {
+        'username': 'teacher1',
+        'password': 'pass1234',
+        'email': 'teacher1@example.com',
+        'role': 'teacher'
+    }
+    with mock.patch('users.tasks.send_confirmation_email.delay') as mocked_task:
+        response = client.post(url, data)
+        assert response.status_code == 201
+        user = User.objects.get(username='teacher1')
+        assert user.role == 'teacher'
+        assert mocked_task.called
+
+
+@pytest.mark.django_db
+def test_user_registration_default_role():
+    client = APIClient()
+    url = reverse('register')
+    data = {
+        'username': 'student3',
+        'password': 'pass1234',
+        'email': 'student3@example.com',
+        # role не указан, должен быть student по умолчанию
+    }
+    with mock.patch('users.tasks.send_confirmation_email.delay') as mocked_task:
+        response = client.post(url, data)
+        assert response.status_code == 201
+        user = User.objects.get(username='student3')
+        assert user.role == 'student'  # значение по умолчанию
+        assert mocked_task.called
+
+
+@pytest.mark.django_db
+def test_user_registration_invalid_role():
+    client = APIClient()
+    url = reverse('register')
+    data = {
+        'username': 'invalid_user',
+        'password': 'pass1234',
+        'email': 'invalid@example.com',
+        'role': 'invalid_role'  # недопустимая роль
+    }
+    response = client.post(url, data)
+    assert response.status_code == 400
+    assert 'role' in response.data
+
+
+@pytest.mark.django_db
 def test_user_login():
     user = User.objects.create_user(username='student2', password='pass1234')
     client = APIClient()
