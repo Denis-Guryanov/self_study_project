@@ -1,7 +1,9 @@
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
-import requests
+import urllib.request
+import urllib.parse
+import json
 
 
 def build_confirmation_link(token: str) -> str:
@@ -35,8 +37,13 @@ def send_telegram_notification(telegram_id: str, message: str):
     }
     
     try:
-        response = requests.post(url, data=data, timeout=10)
-        return response.status_code == 200
+        # Используем urllib вместо requests
+        data_bytes = urllib.parse.urlencode(data).encode('utf-8')
+        req = urllib.request.Request(url, data=data_bytes)
+        req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+        
+        with urllib.request.urlopen(req, timeout=10) as response:
+            return response.getcode() == 200
     except Exception as e:
         print(f"Error sending Telegram notification: {e}")
         return False
